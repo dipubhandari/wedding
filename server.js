@@ -7,26 +7,23 @@ dotenv.config()
 import cors from 'cors'
 import mongoose from 'mongoose'
 import path from 'path'
-
+import authRouter from './routes/authRoutes.js'
+// variables
 const app = express()
-connection(process.env.MONGO_URL)
+// server
 const server = http.createServer(app)
 
-// app.use(formData.parse())
+// router
+app.use('/', authRouter)
 
+// database connection
+connection(process.env.MONGO_URL)
 
+// middleware
 app.use(cors())
-
-
-// app.use('/uploads/logo', express.static(path.join(process.cwd(), './uploads/logo')))
-
 app.use(express.urlencoded({ extended: false }))
-
 app.use(express.json())
-
-
 app.use(bodyParser.json({ limit: "50mb" }))
-
 app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
 
 
