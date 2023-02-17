@@ -9,28 +9,26 @@ import mongoose from 'mongoose'
 import path from 'path'
 import authRouter from './routes/authRoutes.js'
 import venderRouter from './routes/venderRoutes.js'
+import categoryRouter from './routes/categoryRoutes.js'
 
 const app = express()
-connection(process.env.MONGO_URL)
 const server = http.createServer(app)
 
 // app.use(formData.parse())
-
+// middleware
 app.use(cors())
+app.use(express.json());
+// Increase the maximum allowed request size to 50mb
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(express.urlencoded({ extended: false }))
-
-app.use(express.json())
-
-
-app.use(bodyParser.json({ limit: "50mb" }))
-
-app.use(express.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }))
-
-// app.use('/', postRoutes)
+// router
+app.use('/', categoryRouter)
 app.use('/', authRouter)
 app.use('/', venderRouter)
-// deploy code
+connection(process.env.MONGO_URL)
+// app.use('/',categoryRouter)
 
 
+// listen the app
 server.listen(process.env.port, () => { console.log(`The app is running in port`) })
